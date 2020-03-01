@@ -1,28 +1,36 @@
-import { Component, h } from '@stencil/core';
-
+import { Component, h, Listen, State } from '@stencil/core';
 
 @Component({
   tag: 'app-root',
-  styleUrl: 'app-root.css',
+  styleUrl: 'app-root.scss',
   shadow: true
 })
 export class AppRoot {
 
+  @State() allTasks : string[] = [];
+
+  @Listen('addNewTask')
+  createTaskListener(task: CustomEvent): void {
+    this.allTasks = [...this.allTasks, task.detail];
+  }
+
   render() {
     return (
       <div>
+
         <header>
           <h1>Stencil App Starter</h1>
         </header>
 
         <main>
-          <stencil-router>
-            <stencil-route-switch scrollTopOffset={0}>
-              <stencil-route url='/' component='app-home' exact={true} />
-              <stencil-route url='/profile/:name' component='app-profile' />
-            </stencil-route-switch>
-          </stencil-router>
+          <app-home></app-home>
+          <ul>
+            {this.allTasks.map(task =>
+              <li>{task}</li>
+            )}
+          </ul>
         </main>
+
       </div>
     );
   }

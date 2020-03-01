@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, State, Event, EventEmitter } from '@stencil/core';
 
 @Component({
   tag: 'app-home',
@@ -7,21 +7,31 @@ import { Component, h } from '@stencil/core';
 })
 export class AppHome {
 
+  @State() taskValue = '';
+  @Event() addNewTask: EventEmitter;
+
+  handleChangeTask(ev: { currentTarget: { value: string; }; }): void {
+    this.taskValue = ev.currentTarget.value;
+  }
+
+  createTask(ev: UIEvent): void {
+    ev.preventDefault();
+    this.addNewTask.emit(this.taskValue);
+    this.taskValue = '';
+  }
+
   render() {
     return (
-      <div class='app-home'>
-        <p>
-          Welcome to the Stencil App Starter.
-          You can use this starter to build entire apps all with
-          web components using Stencil!
-          Check out our docs on <a href='https://stenciljs.com'>stenciljs.com</a> to get started.
-        </p>
-
-        <stencil-route-link url='/profile/stencil'>
-          <button>
-            Profile page
-          </button>
-        </stencil-route-link>
+      <div class="container">
+        <form onSubmit={this.createTask.bind(this)}>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Task App</span>
+            </div>
+            <input  onInput={this.handleChangeTask.bind(this)} type="text" class="form-control" placeholder="Define Task" value={this.taskValue} />
+            <button type="submit" class="btn btn-sm btn-info">Create the task</button>
+          </div>
+        </form>
       </div>
     );
   }

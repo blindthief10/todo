@@ -47,7 +47,9 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface AppHome {}
+  interface AppHome {
+    'onAddNewTask'?: (event: CustomEvent<any>) => void;
+  }
   interface AppProfile {
     'match'?: MatchResults;
   }
